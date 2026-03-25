@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Hello, World!</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+      <h1 class="title">Hello World!</h1>
+      <p id="currentTime"></p>
+      <script src="script.js"></script>
+  </body>
+</html>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Ruang Belajar - Matematika, Bahasa Indo, IPS, IPA</title>
+  <!-- Google Fonts & Font Awesome -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f1f5f9;
+      color: #0f172a;
+      line-height: 1.5;
+      scroll-behavior: smooth;
+    }
+
+    /* container utama */
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 1.5rem 1.8rem;
+    }
+
+    /* header & hero */
+    .hero {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      border-radius: 2rem;
+      padding: 2rem 2rem;
+      margin-bottom: 2.5rem;
+      color: white;
+      box-shadow: 0 20px 35px -12px rgba(0,0,0,0.2);
+    }
+
+    .hero h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .hero h1 i {
+      background: #facc15;
+      padding: 10px;
+      border-radius: 50%;
+      color: #0f172a;
+      font-size: 1.6rem;
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      margin-top: 0.8rem;
+      opacity: 0.85;
+      max-width: 650px;
+    }
+
+    /* navigasi mata pelajaran (pill) */
+    .subj-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2.2rem;
+      justify-content: center;
+    }
+
+    .nav-btn {
+      background: white;
+      border: none;
+      padding: 0.8rem 1.6rem;
+      border-radius: 60px;
+      font-weight: 600;
+      font-size: 1rem;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      color: #1e293b;
+      border: 1px solid #e2e8f0;
+    }
+
+    .nav-btn i {
+      font-size: 1.2rem;
+    }
+
+    .nav-btn.active {
+      background: #1e293b;
+      color: white;
+      border-color: #1e293b;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.1);
+      transform: scale(1.02);
+    }
+
+    .nav-btn:hover:not(.active) {
+      background: #f8fafc;
+      border-color: #cbd5e1;
+      transform: translateY(-2px);
+    }
+
+    /* konten utama pelajaran */
+    .subject-panel {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .subject-panel.active-panel {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+
+    /* card materi */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.8rem;
+      margin-top: 1rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: 1.5rem;
+      padding: 1.5rem;
+      transition: all 0.2s;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.03);
+      border: 1px solid #eef2f6;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 30px -12px rgba(0,0,0,0.1);
+      border-color: #cbd5e1;
+    }
+
+    .card-icon {
+      font-size: 2.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .card h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .card p {
+      color: #334155;
+      margin-bottom: 1.2rem;
+      font-size: 0.95rem;
+    }
+
+    .btn-materi {
+      background: #f1f5f9;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 40px;
+      font-weight: 500;
+      font-size: 0.85rem;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: 0.2s;
+      color: #0f172a;
+    }
+
+    .btn-materi:hover {
+      background: #e2e8f0;
+    }
+
+    /* modal detail materi */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0,0,0,0.6);
+      backdrop-filter: blur(4px);
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: white;
+      max-width: 550px;
+      width: 90%;
+      border-radius: 2rem;
+      padding: 1.8rem 2rem;
+      position: relative;
+      box-shadow: 0 25px 40px rgba(0,0,0,0.3);
+      animation: scaleIn 0.2s ease;
+    }
+
+    @keyframes scaleIn {
+      from { transform: scale(0.95); opacity: 0;}
+      to { transform: scale(1); opacity: 1;}
+    }
+
+    .modal-content h2 {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+      border-left: 6px solid #facc15;
+      padding-left: 1rem;
+    }
+
+    .modal-content .modal-body {
+      margin: 1rem 0;
+      color: #1e293b;
+      line-height: 1.6;
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 1rem;
+      right: 1.5rem;
+      font-size: 1.8rem;
+      cursor: pointer;
+      color: #64748b;
+      transition: 0.2s;
+    }
+
+    .close-modal:hover {
+      color: #0f172a;
+    }
+
+    .modal-footer {
+      margin-top: 1.5rem;
+      text-align: right;
+    }
+
+    .quiz-btn-small {
+      background: #0f172a;
+      color: white;
+      border: none;
+      padding: 0.5rem 1.2rem;
+      border-radius: 40px;
+      font-weight: 500;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.8rem;
+    }
+
+    /* quiz section */
+    .quiz-area {
+      margin-top: 2.5rem;
+      background: #ffffffdd;
+      backdrop-filter: blur(2px);
+      background: #fef9e3;
+      border-radius: 1.5rem;
+      padding: 1.5rem;
+      border-left: 6px solid #facc15;
+    }
+
+    .quiz-question {
+      font-weight: 700;
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .quiz-opt {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: white;
+      padding: 0.6rem 1rem;
+      border-radius: 60px;
+      border: 1px solid #e2e8f0;
+      cursor: pointer;
+      transition: 0.1s;
+    }
+
+    .quiz-opt:hover {
+      background: #f1f5f9;
+    }
+
+    .quiz-opt input {
+      accent-color: #1e293b;
+      width: 18px;
+      height: 18px;
+    }
+
+    .quiz-feedback {
+      font-weight: 500;
+      margin: 0.5rem 0;
+    }
+
+    .quiz-next {
+      background: #1e293b;
+      color: white;
+      border: none;
+      padding: 0.6rem 1.5rem;
+      border-radius: 40px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    hr {
+      margin: 1rem 0;
+      border-color: #e2e8f0;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 3rem;
+      padding: 1.5rem 0;
+      color: #475569;
+      font-size: 0.85rem;
+      border-top: 1px solid #e2e8f0;
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        padding: 1rem;
+      }
+      .hero h1 {
+        font-size: 1.6rem;
+      }
+      .nav-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+      }
+      .card h3 {
+        font-size: 1.3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="hero">
+    <h1><i class="fas fa-graduation-cap"></i> Ruang Belajar Cerdas</h1>
+    <p>Belajar menyenangkan untuk Matematika, Bahasa Indonesia, IPS, dan IPA. Pilih pelajaran, pelajari materi, dan uji pemahaman dengan kuis singkat!</p>
+  </div>
+
+  <!-- navigasi mata pelajaran -->
+  <div class="subj-nav">
+    <button class="nav-btn" data-subject="math"><i class="fas fa-calculator"></i> Matematika</button>
+    <button class="nav-btn" data-subject="indo"><i class="fas fa-language"></i> Bahasa Indonesia</button>
+    <button class="nav-btn" data-subject="ips"><i class="fas fa-landmark"></i> IPS</button>
+    <button class="nav-btn" data-subject="ipa"><i class="fas fa-flask"></i> IPA</button>
+  </div>
+
+  <!-- panel matematika -->
+  <div id="math-panel" class="subject-panel">
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-icon">📐</div>
+        <h3>Aljabar</h3>
+        <p>Persamaan linear, variabel, dan operasi bentuk aljabar. Dasar untuk memecahkan masalah hitung.</p>
+        <button class="btn-materi" data-materi="aljabar-math"><i class="fas fa-book-open"></i> Baca materi</button>
+      </div>
+      <div class="card">
+        <div class="card-icon">📊</div>
+        <h3>Geometri</h3>
+        <p>Bangun datar, luas, keliling, sudut, dan teorema Pythagoras.</p>
+        <button class="btn-materi" data-materi="geometri-math"><i class="fas fa-book-open"></i> Baca materi</button>
+      </div>
+      <div class="card">
+        <div class="card-icon">📈</div>
+        <h3>Statistika Dasar</h3>
+        <p>Mean, median, modus, dan penyajian data dalam diagram.</p>
+        <button class="btn-materi" data-materi="stat-math"><i class="fas fa-book-open"></i> Baca materi</button>
+      </div>
+    </div>
+    <!-- KUIS untuk matematika -->
+    <div class="quiz-area" id="quiz-math">
+      <h3><i class="fas fa-puzzle-piece"></i> Kuis Matematika ✨</h3>
+      <div id="math-quiz-container"></div>
+    </div>
+  </div>
+
+  <!-- panel bahasa indonesia -->
+  <div id="indo-panel" class="subject-panel">
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-icon">✍️</div>
+        <h3>Teks Prosedur</h3>
+        <p>Struktur, ciri kebahasaan, dan contoh teks prosedur membuat sesuatu.</p>
+        <button class="btn-materi" data-materi="teksprosedur-indo"><i class="fas fa-book-open"></i> Baca materi</button>
+      </div>
+      <div class="card">
+        <div class="card-icon">📖</div>
+        <h3>Puisi Rakyat</h3>
+        <p>Pantun, gurindam, dan syair: pengertian dan contoh populer.</p>
+        <button class="btn-materi" data-materi="puisi-indo"><i class="fas fa-book-open"></i> Baca materi</button>
+      </div>
+      <div class="card">
+        <div class="card-icon">📝</div>
+        <h3>Kalimat Efektif</h3>
+        <p>Ciri-ciri kalimat efektif, ejaan, dan penggunaan kata baku.</p>
+        <button class="btn-materi" data-materi="kalimat-indo"><i class="fas fa-book-open"></i> Baca materi</button>
+      </div>
+    </div>
+    <div class="quiz-area" id="quiz-indo">
+      <h3><i class="fas fa-puzzle-piece"></i> Kuis Bahasa Indonesia</h3>
+      <div id="indo-quiz-container"></div>
+    </div>
+  </div>
+
+  <!-- panel ips -->
+  <div id="ips-panel" class="subject-panel">
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-icon">🏝️</div>
+        <h3>Keragaman Budaya</h3>
+        <p>Keanekaragaman suku, bahasa, dan tradisi di Indonesia.</p>
+        <button class="btn-materi" data-materi="budaya-ips"><i class="fas fa-book-open"></i> Baca materi</button>
+      </div>
+      <div class="card">
+        <div class="card-icon">🌏</div>
+        <h3>Kondisi Geografis</h3>
+        <p>Letak astronomis, iklim, dan pengaruh terhadap kehidupan.</p>
+        <button class="btn-materi" data-materi="geografis-ips"><i class="fas fa-book-open"></i> Baca materi</button>
+      </div>
+      <div class="card">
+        <div class="card-icon">⚖️</div>
+        <h3>Sejarah Kemerdekaan</h3>
+        <p>Proklamasi, perjuangan diplomasi, dan tokoh penting.</p>
+        <button class="btn-materi" data-materi="sejarah-ips"><i class="fas fa-book-open"></i> Baca materi</button>
+      </div>
+    </div>
+    <div class="quiz-area" id="quiz-ips">
+      <h3><i class="fas fa-puzzle-piece"></i> Kuis IPS</h3>
+      <div id="ips-quiz-container"></div>
+    </div>
+  </div>
+
+  <!-- panel ipa -->
+  <div id="ipa-panel" class="subject-panel">
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-icon">🧬</div>
+        <h3>Sistem Pencernaan</h3>
+        <p>Organ pencernaan manusia dan fungsinya, serta proses makanan.</p>
+        <button class="btn-materi" data-materi="pencernaan-ipa"><i class="fas fa-book-open"></i> Baca materi</button>
+      </div>
+      <div class="card">
+        <div class="card-icon">⚡</div>
+        <h3>Listrik Dinamis</h3>
+        <p>Arus listrik, rangkaian sederhana, dan hukum Ohm.</p>
+        <button class="btn-materi" data-materi="listrik-ipa"><i class="fas fa-book-open"></i> Baca materi</button>
+      </div>
+      <div class="card">
+        <div class="card-icon">🌍</div>
+        <h3>Tata Surya</h3>
+        <p>Planet, rotasi, revolusi, dan fenomena gerhana.</p>
+        <button class="btn-materi" data-materi="tatasurya-ipa"><i class="fas fa-book-open"></i> Baca materi</button>
+      </div>
+    </div>
+    <div class="quiz-area" id="quiz-ipa">
+      <h3><i class="fas fa-puzzle-piece"></i> Kuis IPA</h3>
+      <div id="ipa-quiz-container"></div>
+    </div>
+  </div>
+
+  <footer>
+    <i class="fas fa-laptop-code"></i> Belajar fleksibel • Materi & kuis interaktif
+  </footer>
+</div>
+
+<!-- modal materi -->
+<div id="materiModal" class="modal">
+  <div class="modal-content">
+    <span class="close-modal">&times;</span>
+    <h2 id="modalTitle">Judul Materi</h2>
+    <div class="modal-body" id="modalBody">
+      konten materi akan tampil di sini.
+    </div>
+    <div class="modal-footer">
+      <button class="quiz-btn-small" id="modalQuizBtn">📝 Coba kuis terkait</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ----- DATA MATERI LENGKAP -----
+  const materiDatabase = {
+    "aljabar-math": { title: "Aljabar Dasar", content: "Aljabar menggunakan variabel (x, y) untuk mewakili bilangan. Contoh: 2x + 5 = 15 → 2x = 10 → x = 5. Operasi aljabar meliputi penjumlahan, pengurangan, perkalian suku sejenis. Penting untuk menyelesaikan persamaan linear satu variabel." },
+    "geometri-math": { title: "Geometri Dasar", content: "Luas persegi = s², luas segitiga = ½ × a × t. Keliling lingkaran = 2πr. Teorema Pythagoras: a² + b² = c² pada segitiga siku-siku." },
+    "stat-math": { title: "Statistika", content: "Mean = jumlah data / banyak data. Median = nilai tengah setelah diurutkan. Modus = nilai yang paling sering muncul. Diagram batang dan lingkaran membantu visualisasi." },
+    "teksprosedur-indo": { title: "Teks Prosedur", content: "Teks prosedur bertujuan menjelaskan langkah-langkah melakukan sesuatu. Struktur: tujuan, material, langkah-langkah. Contoh: cara membuat nasi goreng. Menggunakan konjungsi temporal (pertama, kemudian, selanjutnya)." },
+    "puisi-indo": { title: "Puisi Rakyat", content: "Pantun bersajak a-b-a-b, baris 1-2 sampiran, 3-4 isi. Gurindam dua baris dengan isi nasihat. Syair terdiri atas 4 baris dengan rima a-a-a-a. Kaya akan nilai budaya." },
+    "kalimat-indo": { title: "Kalimat Efektif", content: "Ciri: kesepadanan struktur, keparalelan, ketegasan makna, kehematan kata, dan kelogisan. Contoh: 'Setiap siswa harus mengerjakan tugas.' Bukan: 'Setiap siswa-siswi harus mengerjakan tugas-tugas mereka.'" },
+    "budaya-ips": { title: "Keragaman Budaya Indonesia", content: "Indonesia memiliki lebih dari 1.300 suku bangsa. Rumah adat (Gadang, Joglo), tarian (Saman, Pendet), dan upacara adat mencerminkan Bhinneka Tunggal Ika. Keberagaman menjadi kekuatan nasional." },
+    "geografis-ips": { title: "Kondisi Geografis", content: "Letak astronomis 6°LU-11°LS dan 95°BT-141°BT. Iklim tropis dengan dua musim. Indonesia berada di pertemuan lempeng sehingga rawan gempa tetapi tanah subur." },
+    "sejarah-ips": { title: "Proklamasi Kemerdekaan", content: "Proklamasi 17 Agustus 1945 dibacakan Soekarno-Hatta. Perjuangan diplomasi (Perjanjian Linggarjati, Renville) hingga pengakuan kedaulatan 1949. Tokoh: Soekarno, Hatta, Sutan Sjahrir." },
+    "pencernaan-ipa": { title: "Sistem Pencernaan Manusia", content: "Mulut (enzim amilase) → kerongkongan → lambung (asam lambung) → usus halus (penyerapan sari makanan) → usus besar → anus. Fungsi hati memproduksi empedu." },
+    "listrik-ipa": { title: "Listrik Dinamis", content: "Arus listrik mengalir karena beda potensial. Hukum Ohm: V = I × R. Rangkaian seri dan paralel mempengaruhi hambatan total. Contoh aplikasi: lampu dan baterai." },
+    "tatasurya-ipa": { title: "Tata Surya", content: "Matahari sebagai pusat, 8 planet: Merkurius, Venus, Bumi, Mars, Jupiter, Saturnus, Uranus, Neptunus. Rotasi bumi menyebabkan siang-malam, revolusi menyebabkan musim dan rasi bintang." }
+  };
+
+  // ----- QUIZ DATA untuk setiap pelajaran (masing-masing 3 pertanyaan) -----
+  const quizzes = {
+    math: [
+      { question: "Berapakah hasil dari 2x + 3 = 11, nilai x = ...", options: ["3", "4", "5", "6"], correct: "4" },
+      { question: "Luas segitiga dengan alas 10 cm dan tinggi 6 cm adalah ... cm²", options: ["30", "60", "15", "45"], correct: "30" },
+      { question: "Nilai mean dari data 5, 7, 9, 5, 4 adalah ...", options: ["5", "6", "7", "5.5"], correct: "6" }
+    ],
+    indo: [
+      { question: "Pantun bersajak ....", options: ["a-a-a-a", "a-b-a-b", "a-a-b-b", "a-b-b-a"], correct: "a-b-a-b" },
+      { question: "Berikut yang termasuk ciri kalimat efektif adalah ...", options: ["Boros kata", "Tidak logis", "Kesejajaran bentuk", "Subjek ganda"], correct: "Kesejajaran bentuk" },
+      { question: "Teks yang berisi langkah-langkah membuat sesuatu disebut ...", options: ["Eksposisi", "Prosedur", "Deskripsi", "Narasi"], correct: "Prosedur" }
+    ],
+    ips: [
+      { question: "Bhinneka Tunggal Ika berarti ...", options: ["Berbeda-beda tetap satu", "Bersatu kita teguh", "Satu nusa satu bangsa", "Majemuk bersatu"], correct: "Berbeda-beda tetap satu" },
+      { question: "Letak astronomis Indonesia berada di antara ...", options: ["6°LU-11°LS dan 95°BT-141°BT", "5°LU-12°LS dan 90°BT-140°BT", "7°LU-10°LS dan 100°BT-145°BT", "0°-10°LS dan 100°BT-150°BT"], correct: "6°LU-11°LS dan 95°BT-141°BT" },
+      { question: "Proklamasi Kemerdekaan Indonesia dilaksanakan pada tahun ...", options: ["1945", "1946", "1949", "1950"], correct: "1945" }
+    ],
+    ipa: [
+      { question: "Enzim yang terdapat di dalam mulut berfungsi memecah ...", options: ["Protein", "Lemak", "Amilum (pati)", "Vitamin"], correct: "Amilum (pati)" },
+      { question: "Rumus Hukum Ohm adalah ...", options: ["V = I/R", "I = V×R", "V = I×R", "R = V×I"], correct: "V = I×R" },
+      { question: "Planet terbesar dalam tata surya adalah ...", options: ["Jupiter", "Saturnus", "Bumi", "Mars"], correct: "Jupiter" }
+    ]
+  };
+
+  // state quiz
+  let currentQuiz = { subject: "math", index: 0, userAnswers: [], quizData: null };
+  
+  function renderQuiz(subjectId) {
+    const quizData = quizzes[subjectId];
+    if (!quizData) return;
+    const container = document.getElementById(`quiz-${subjectId}`);
+    if (!container) return;
+    const quizContainer = container.querySelector(`[id$="-quiz-container"]`) || container.querySelector(`div[id^="${subjectId}-quiz-container"]`);
+    let realContainer = quizContainer;
+    if (!realContainer && container.id.includes("quiz")) realContainer = container.querySelector(`#${subjectId}-quiz-container`);
+    if (!realContainer) {
+      // fallback: cari div dengan id
+      const fallback = document.getElementById(`${subjectId}-quiz-container`);
+      if(fallback) realContainer = fallback;
+      else return;
+    }
+    // ambil state per map
+    if (!window.quizState) window.quizState = {};
+    if (!window.quizState[subjectId]) {
+      window.quizState[subjectId] = { index: 0, answers: Array(quizData.length).fill(null), finished: false };
+    }
+    const state = window.quizState[subjectId];
+    const q = quizData[state.index];
+    if (!q) return;
+    let html = `<div class="quiz-question">${state.index+1}. ${q.question}</div>`;
+    html += `<div class="quiz-options">`;
+    q.options.forEach((opt, idx) => {
+      const checked = (state.answers[state.index] === opt) ? 'checked' : '';
+      html += `<label class="quiz-opt"><input type="radio" name="quiz_${subjectId}" value="${opt.replace(/"/g, '&quot;')}" ${checked}> ${opt}</label>`;
+    });
+    html += `</div>`;
+    html += `<div class="quiz-feedback" id="fb_${subjectId}"></div>`;
+    html += `<button class="quiz-next" data-subj="${subjectId}">${state.index+1 === quizData.length ? 'Selesai & Lihat Nilai' : 'Jawab & Selanjutnya'}</button>`;
+    if (state.finished) {
+      let score = state.answers.filter((ans, idx) => ans === quizData[idx].correct).length;
+      html = `<div style="background:#e6f7e6; padding:1rem; border-radius:1rem;"><strong>✨ Hasil Kuis ✨</strong><br>Skor: ${score} / ${quizData.length}<br>${score === quizData.length ? "🎉 Sempurna! Hebat!" : "Terus belajar, tingkatkan lagi!"}</div>`;
+    }
+    realContainer.innerHTML = html;
+    
+    // event listener radio
+    const radios = realContainer.querySelectorAll(`input[name="quiz_${subjectId}"]`);
+    radios.forEach(radio => {
+      radio.addEventListener('change', (e) => {
+        const val = e.target.value;
+        state.answers[state.index] = val;
+        const fbDiv = realContainer.querySelector(`#fb_${subjectId}`);
+        if (fbDiv) fbDiv.innerHTML = `<span style="color:green;">✔️ Jawaban tersimpan</span>`;
+        setTimeout(() => { if(fbDiv) fbDiv.innerHTML = ""; }, 1000);
+      });
+    });
+    const nextBtn = realContainer.querySelector('.quiz-next');
+    if (nextBtn && !state.finished) {
+      nextBtn.addEventListener('click', () => {
+        if (state.answers[state.index] === undefined || state.answers[state.index] === null) {
+          const fbDiv = realContainer.querySelector(`#fb_${subjectId}`);
+          if(fbDiv) fbDiv.innerHTML = `<span style="color:#b91c1c;">⚠️ Pilih jawaban terlebih dahulu!</span>`;
+          return;
+        }
+        if (state.index + 1 < quizData.length) {
+          state.index++;
+          renderQuiz(subjectId);
+        } else {
+          state.finished = true;
+          renderQuiz(subjectId);
+        }
+      });
+    }
+  }
+
+  // panel switcher
+  const panels = {
+    math: document.getElementById('math-panel'),
+    indo: document.getElementById('indo-panel'),
+    ips: document.getElementById('ips-panel'),
+    ipa: document.getElementById('ipa-panel')
+  };
+  const navBtns = document.querySelectorAll('.nav-btn');
+  let currentSubject = 'math';
+  
+  function showSubject(subject) {
+    Object.keys(panels).forEach(key => {
+      panels[key].classList.remove('active-panel');
+    });
+    panels[subject].classList.add('active-panel');
+    navBtns.forEach(btn => {
+      if(btn.getAttribute('data-subject') === subject) btn.classList.add('active');
+      else btn.classList.remove('active');
+    });
+    currentSubject = subject;
+    renderQuiz(subject);
+  }
+  
+  navBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const subj = btn.getAttribute('data-subject');
+      showSubject(subj);
+    });
+  });
+  
+  // modal materi
+  const modal = document.getElementById('materiModal');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalBody = document.getElementById('modalBody');
+  const closeModalSpan = document.querySelector('.close-modal');
+  let currentMateriKey = null;
+  
+  function openMateri(key) {
+    const data = materiDatabase[key];
+    if(data) {
+      modalTitle.innerText = data.title;
+      modalBody.innerText = data.content;
+      currentMateriKey = key;
+      modal.style.display = 'flex';
+    }
+  }
+  
+  document.querySelectorAll('.btn-materi').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const materiKey = btn.getAttribute('data-materi');
+      if(materiKey) openMateri(materiKey);
+    });
+  });
+  
+  closeModalSpan.onclick = () => { modal.style.display = 'none'; };
+  window.onclick = (e) => { if(e.target === modal) modal.style.display = 'none'; };
+  
+  document.getElementById('modalQuizBtn').addEventListener('click', () => {
+    modal.style.display = 'none';
+    // arahkan ke kuis sesuai subject dari materi (tebakan sederhana)
+    if(currentMateriKey) {
+      if(currentMateriKey.includes('math')) showSubject('math');
+      else if(currentMateriKey.includes('indo')) showSubject('indo');
+      else if(currentMateriKey.includes('ips')) showSubject('ips');
+      else if(currentMateriKey.includes('ipa')) showSubject('ipa');
+      else showSubject(currentSubject);
+    }
+  });
+  
+  // inisialisasi awal
+  showSubject('math');
+</script>
+</body>
+</html>
